@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecotwin - Crée ton avatar écolo</title>
+    <title>Ecotwin - Challenges Écolos</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -78,7 +78,6 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             border-left: 5px solid;
             position: relative;
-            overflow: hidden;
         }
         .easy {
             border-left-color: #4CAF50;
@@ -122,31 +121,20 @@
             text-decoration: none;
             font-weight: bold;
         }
-        .confirmation-panel {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+        .proof-section {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
         }
-        .confirmation-panel.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .btn-confirm {
-            background-color: #4CAF50;
-        }
-        .btn-cancel {
-            background-color: #f44336;
+        .proof-preview {
+            max-width: 100%;
+            max-height: 150px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: none;
         }
         .challenge-status {
             margin-top: 10px;
@@ -159,23 +147,38 @@
         .in-progress {
             color: #FFC107;
         }
-        .proof-section {
-            display: none;
-            margin-top: 15px;
-            text-align: center;
-        }
-        .proof-preview {
-            max-width: 100%;
-            max-height: 150px;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
         .points-display {
             font-size: 20px;
             font-weight: bold;
             color: #4CAF50;
             text-align: center;
             margin: 20px 0;
+        }
+        .confirmation-dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .confirmation-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            text-align: center;
+        }
+        .btn-confirm {
+            background-color: #4CAF50;
+        }
+        .btn-cancel {
+            background-color: #f44336;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -188,50 +191,47 @@
     <div class="nav">
         <a href="/">Accueil</a>
         <a href="/store">Boutique</a>
-        <a href="#profile">Mon Profil</a>
+        
     </div>
 
     <div class="container">
         <!-- Section Avatar -->
         <div class="avatar-section">
-            <h2 class="avatar-title">Créons ensemble ton Twin Avatar</h2>
+            <h2 class="avatar-title">Créez votre Twin Avatar</h2>
             <img id="avatar-preview" src="https://via.placeholder.com/200?text=Ton+Avatar" alt="Preview Avatar">
             <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
-            <button class="btn" onclick="document.getElementById('avatar-upload').click()">Choisis ta photo</button>
-            <button class="btn" onclick="uploadAvatar()">Générer mon Twin Avatar</button>
-            <p>Ton avatar évoluera avec tes actions écologiques!</p>
+            <button class="btn" onclick="document.getElementById('avatar-upload').click()">Choisir une photo</button>
+            <button class="btn" onclick="uploadAvatar()">Générer mon avatar</button>
+            <p>Votre avatar évoluera avec vos actions écologiques!</p>
         </div>
 
         <!-- Points Display -->
         <div class="points-display">
-            Points: <span id="user-points">0</span> ♻️
+            Votre score: <span id="user-points">0</span> points ♻️
         </div>
 
         <!-- Section Challenges -->
         <div class="challenge-section">
-            <h2 class="section-title">Tes défis du jour</h2>
+            <h2 class="section-title">Vos défis du jour</h2>
             
             <div class="challenge-card easy" id="challenge-1">
                 <h3>Défi Facile 
                     <span class="points-badge">10 points</span>
                 </h3>
-                <p>Éteins les lumières dans les pièces inoccupées pendant 2 heures</p>
+                <p>Éteindre les lumières inutiles pendant 2 heures</p>
                 <button class="btn" onclick="showConfirmation(1)">Accepter le défi</button>
                 
-                <div class="confirmation-panel" id="confirmation-1">
-                    <p>Es-tu sûr de vouloir relever ce défi ?</p>
-                    <div>
-                        <button class="btn btn-confirm" onclick="confirmChallenge(1)">Confirmer</button>
-                        <button class="btn btn-cancel" onclick="hideConfirmation(1)">Annuler</button>
-                    </div>
-                </div>
-                
                 <div class="proof-section" id="proof-section-1">
-                    <p>Prends une photo pour prouver que tu as relevé le défi !</p>
+                    <p><strong>Preuve requise:</strong> Envoyez une photo montrant que vous avez relevé ce défi</p>
                     <input type="file" id="proof-upload-1" accept="image/*" style="display: none;">
-                    <button class="btn" onclick="document.getElementById('proof-upload-1').click()">Sélectionner une photo</button>
+                    <button class="btn" onclick="document.getElementById('proof-upload-1').click()">
+                        📸 Prendre une photo
+                    </button>
                     <img id="proof-preview-1" class="proof-preview" src="" alt="Aperçu de la preuve">
-                    <button class="btn" onclick="submitProof(1)">Envoyer la preuve</button>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-confirm" onclick="submitProof(1)">Valider la preuve</button>
+                        <button class="btn btn-cancel" onclick="cancelChallenge(1)">Annuler</button>
+                    </div>
                 </div>
                 
                 <div class="challenge-status" id="status-1"></div>
@@ -241,23 +241,20 @@
                 <h3>Défi Intermédiaire 
                     <span class="points-badge">25 points</span>
                 </h3>
-                <p>Prends une douche de moins de 5 minutes aujourd'hui</p>
+                <p>Douche de moins de 5 minutes</p>
                 <button class="btn" onclick="showConfirmation(2)">Accepter le défi</button>
                 
-                <div class="confirmation-panel" id="confirmation-2">
-                    <p>Es-tu sûr de vouloir relever ce défi ?</p>
-                    <div>
-                        <button class="btn btn-confirm" onclick="confirmChallenge(2)">Confirmer</button>
-                        <button class="btn btn-cancel" onclick="hideConfirmation(2)">Annuler</button>
-                    </div>
-                </div>
-                
                 <div class="proof-section" id="proof-section-2">
-                    <p>Prends une photo pour prouver que tu as relevé le défi !</p>
+                    <p><strong>Preuve requise:</strong> Envoyez une photo montrant que vous avez relevé ce défi</p>
                     <input type="file" id="proof-upload-2" accept="image/*" style="display: none;">
-                    <button class="btn" onclick="document.getElementById('proof-upload-2').click()">Sélectionner une photo</button>
+                    <button class="btn" onclick="document.getElementById('proof-upload-2').click()">
+                        📸 Prendre une photo
+                    </button>
                     <img id="proof-preview-2" class="proof-preview" src="" alt="Aperçu de la preuve">
-                    <button class="btn" onclick="submitProof(2)">Envoyer la preuve</button>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-confirm" onclick="submitProof(2)">Valider la preuve</button>
+                        <button class="btn btn-cancel" onclick="cancelChallenge(2)">Annuler</button>
+                    </div>
                 </div>
                 
                 <div class="challenge-status" id="status-2"></div>
@@ -267,26 +264,35 @@
                 <h3>Défi Difficile 
                     <span class="points-badge">50 points</span>
                 </h3>
-                <p>Passe une journée sans utiliser de plastique à usage unique</p>
+                <p>Journée sans plastique à usage unique</p>
                 <button class="btn" onclick="showConfirmation(3)">Accepter le défi</button>
                 
-                <div class="confirmation-panel" id="confirmation-3">
-                    <p>Es-tu sûr de vouloir relever ce défi ?</p>
-                    <div>
-                        <button class="btn btn-confirm" onclick="confirmChallenge(3)">Confirmer</button>
-                        <button class="btn btn-cancel" onclick="hideConfirmation(3)">Annuler</button>
+                <div class="proof-section" id="proof-section-3">
+                    <p><strong>Preuve requise:</strong> Envoyez une photo montrant que vous avez relevé ce défi</p>
+                    <input type="file" id="proof-upload-3" accept="image/*" style="display: none;">
+                    <button class="btn" onclick="document.getElementById('proof-upload-3').click()">
+                        📸 Prendre une photo
+                    </button>
+                    <img id="proof-preview-3" class="proof-preview" src="" alt="Aperçu de la preuve">
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-confirm" onclick="submitProof(3)">Valider la preuve</button>
+                        <button class="btn btn-cancel" onclick="cancelChallenge(3)">Annuler</button>
                     </div>
                 </div>
                 
-                <div class="proof-section" id="proof-section-3">
-                    <p>Prends une photo pour prouver que tu as relevé le défi !</p>
-                    <input type="file" id="proof-upload-3" accept="image/*" style="display: none;">
-                    <button class="btn" onclick="document.getElementById('proof-upload-3').click()">Sélectionner une photo</button>
-                    <img id="proof-preview-3" class="proof-preview" src="" alt="Aperçu de la preuve">
-                    <button class="btn" onclick="submitProof(3)">Envoyer la preuve</button>
-                </div>
-                
                 <div class="challenge-status" id="status-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div class="confirmation-dialog" id="confirmation-dialog">
+        <div class="confirmation-content">
+            <h3>Confirmer le défi</h3>
+            <p id="confirmation-text">Êtes-vous sûr de vouloir relever ce défi?</p>
+            <div>
+                <button class="btn btn-confirm" id="confirm-accept">Oui, je relève le défi</button>
+                <button class="btn btn-cancel" onclick="hideConfirmation()">Non, annuler</button>
             </div>
         </div>
     </div>
@@ -299,22 +305,13 @@
             avatar: null,
             activeChallenges: {}
         };
+        let currentChallengeId = null;
 
-        // Initialisation des écouteurs pour les preuves
-        function initProofUploaders() {
-            [1, 2, 3].forEach(challengeId => {
-                document.getElementById(`proof-upload-${challengeId}`).addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            document.getElementById(`proof-preview-${challengeId}`).src = e.target.result;
-                        }
-                        reader.readAsDataURL(file);
-                    }
-                });
-            });
-        }
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            initProofUploaders();
+        });
 
         // Gestion de l'avatar
         document.getElementById('avatar-upload').addEventListener('change', function(event) {
@@ -335,113 +332,130 @@
                 return;
             }
 
-            // Simulation de la création d'avatar
-            alert("Super! Nous créons ton Twin Avatar...");
-            
-            // Ici vous enverriez normalement l'image au serveur
+            alert("Génération de votre avatar en cours...");
             setTimeout(() => {
-                alert("Ton Twin Avatar est prêt! Maintenant, relève des défis pour le personnaliser.");
                 currentUser.avatar = document.getElementById('avatar-preview').src;
                 saveUserData();
-            }, 2000);
+                alert("Votre avatar est prêt! Relevez des défis pour le personnaliser.");
+            }, 1500);
         }
 
-        // Gestion des confirmations
+        // Gestion des défis
         function showConfirmation(challengeId) {
-            document.getElementById(`confirmation-${challengeId}`).classList.add('active');
-        }
-
-        function hideConfirmation(challengeId) {
-            document.getElementById(`confirmation-${challengeId}`).classList.remove('active');
-        }
-
-        function confirmChallenge(challengeId) {
-            hideConfirmation(challengeId);
-            startChallenge(challengeId);
-        }
-
-        // Gestion des challenges
-        function startChallenge(challengeId) {
+            currentChallengeId = challengeId;
             const challenges = {
                 1: { name: "Défi Facile", points: 10 },
                 2: { name: "Défi Intermédiaire", points: 25 },
                 3: { name: "Défi Difficile", points: 50 }
             };
             
-            currentUser.activeChallenges[challengeId] = {
-                ...challenges[challengeId],
-                startTime: new Date(),
-                completed: false,
-                proof: null
+            document.getElementById('confirmation-text').textContent = 
+                `Relevez le "${challenges[challengeId].name}" pour ${challenges[challengeId].points} points?`;
+            
+            document.getElementById('confirm-accept').onclick = function() {
+                acceptChallenge(challengeId);
+                hideConfirmation();
             };
             
-            updateChallengeUI(challengeId);
-            saveUserData();
-            
+            document.getElementById('confirmation-dialog').style.display = 'flex';
+        }
+
+        function hideConfirmation() {
+            document.getElementById('confirmation-dialog').style.display = 'none';
+        }
+
+        function acceptChallenge(challengeId) {
             // Afficher la section de preuve
             document.getElementById(`proof-section-${challengeId}`).style.display = 'block';
+            
+            // Cacher le bouton d'acceptation
+            document.querySelector(`#challenge-${challengeId} button`).style.display = 'none';
+            
+            // Mettre à jour le statut
+            document.getElementById(`status-${challengeId}`).textContent = "En attente de votre photo preuve...";
+            document.getElementById(`status-${challengeId}`).className = "challenge-status in-progress";
+            
+            // Enregistrer le défi
+            currentUser.activeChallenges[challengeId] = {
+                name: ["Facile", "Intermédiaire", "Difficile"][challengeId-1],
+                points: [10, 25, 50][challengeId-1],
+                status: "pending"
+            };
+            
+            saveUserData();
+        }
+
+        function initProofUploaders() {
+            [1, 2, 3].forEach(challengeId => {
+                const uploader = document.getElementById(`proof-upload-${challengeId}`);
+                if (uploader) {
+                    uploader.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                const preview = document.getElementById(`proof-preview-${challengeId}`);
+                                preview.src = event.target.result;
+                                preview.style.display = 'block';
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            });
         }
 
         function submitProof(challengeId) {
             const proofInput = document.getElementById(`proof-upload-${challengeId}`);
-            if (!proofInput.files || !proofInput.files[0]) {
-                alert("Veuillez sélectionner une photo comme preuve!");
+            if (!proofInput.files || proofInput.files.length === 0) {
+                alert("Veuillez d'abord prendre une photo preuve!");
                 return;
             }
 
-            const challenge = currentUser.activeChallenges[challengeId];
-            if (!challenge) return;
-            
-            // Simulation d'envoi de preuve au serveur
-            document.getElementById(`status-${challengeId}`).textContent = "⏳ Vérification en cours...";
-            document.getElementById(`status-${challengeId}`).className = "challenge-status in-progress";
+            // Simulation d'envoi au serveur
+            document.getElementById(`status-${challengeId}`).textContent = "Validation de votre preuve en cours...";
             
             setTimeout(() => {
-                // Simulation de validation réussie
-                challenge.completed = true;
-                challenge.proof = document.getElementById(`proof-preview-${challengeId}`).src;
-                currentUser.points += challenge.points;
+                // Validation réussie
+                const points = [10, 25, 50][challengeId-1];
+                currentUser.points += points;
+                currentUser.activeChallenges[challengeId].status = "completed";
                 
-                updateChallengeUI(challengeId);
-                saveUserData();
-                updatePointsDisplay();
-                
-                // Cacher la section de preuve
+                document.getElementById(`status-${challengeId}`).textContent = `✓ Défi validé! +${points} points`;
+                document.getElementById(`status-${challengeId}`).className = "challenge-status completed";
                 document.getElementById(`proof-section-${challengeId}`).style.display = 'none';
                 
-                alert("Félicitations! Ta preuve a été validée. Tu as gagné " + challenge.points + " points!");
+                // Réactiver le bouton
+                const btn = document.querySelector(`#challenge-${challengeId} button`);
+                btn.style.display = 'inline-block';
+                btn.textContent = "Recommencer le défi";
+                
+                updatePointsDisplay();
+                saveUserData();
+                
+                alert(`Félicitations! Vous avez gagné ${points} points!`);
             }, 2000);
         }
 
-        function updateChallengeUI(challengeId) {
-            const challenge = currentUser.activeChallenges[challengeId];
-            const statusElement = document.getElementById(`status-${challengeId}`);
-            const buttonContainer = document.getElementById(`challenge-${challengeId}`).querySelector('button').parentNode;
+        function cancelChallenge(challengeId) {
+            // Réinitialiser le défi
+            document.getElementById(`proof-section-${challengeId}`).style.display = 'none';
+            document.getElementById(`status-${challengeId}`).textContent = "";
             
-            if (!challenge) {
-                statusElement.textContent = '';
-                buttonContainer.innerHTML = '<button class="btn" onclick="showConfirmation(' + challengeId + ')">Accepter le défi</button>';
-                document.getElementById(`proof-section-${challengeId}`).style.display = 'none';
-                return;
-            }
+            // Réafficher le bouton d'acceptation
+            const btn = document.querySelector(`#challenge-${challengeId} button`);
+            btn.style.display = 'inline-block';
+            btn.textContent = "Accepter le défi";
             
-            if (challenge.completed) {
-                statusElement.textContent = '✓ Défi accompli! +' + challenge.points + ' points';
-                statusElement.className = 'challenge-status completed';
-                buttonContainer.innerHTML = '<button class="btn" onclick="showConfirmation(' + challengeId + ')">Recommencer</button>';
-                document.getElementById(`proof-section-${challengeId}`).style.display = 'none';
-            } else {
-                statusElement.textContent = 'Défi en cours - Envoie ta preuve!';
-                statusElement.className = 'challenge-status in-progress';
-                buttonContainer.innerHTML = '';
-            }
+            // Supprimer le défi actif
+            delete currentUser.activeChallenges[challengeId];
+            saveUserData();
         }
 
         function updatePointsDisplay() {
             document.getElementById('user-points').textContent = currentUser.points;
         }
 
-        // Fonctions utilitaires
         function saveUserData() {
             localStorage.setItem('ecotwinUser', JSON.stringify(currentUser));
         }
@@ -450,24 +464,24 @@
             const savedUser = localStorage.getItem('ecotwinUser');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
+                
                 if (currentUser.avatar) {
                     document.getElementById('avatar-preview').src = currentUser.avatar;
                 }
                 
-                // Mettre à jour l'UI pour tous les défis
-                [1, 2, 3].forEach(challengeId => {
-                    updateChallengeUI(challengeId);
-                });
+                document.getElementById('user-points').textContent = currentUser.points || 0;
                 
-                updatePointsDisplay();
+                // Restaurer l'état des défis
+                for (const challengeId in currentUser.activeChallenges) {
+                    if (currentUser.activeChallenges[challengeId].status === "pending") {
+                        document.getElementById(`proof-section-${challengeId}`).style.display = 'block';
+                        document.querySelector(`#challenge-${challengeId} button`).style.display = 'none';
+                        document.getElementById(`status-${challengeId}`).textContent = "En attente de votre photo preuve...";
+                        document.getElementById(`status-${challengeId}`).className = "challenge-status in-progress";
+                    }
+                }
             }
         }
-
-        // Chargement initial
-        document.addEventListener('DOMContentLoaded', function() {
-            loadUserData();
-            initProofUploaders();
-        });
     </script>
 </body>
 </html>
